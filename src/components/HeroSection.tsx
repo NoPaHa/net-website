@@ -1,20 +1,43 @@
 import { ArrowDown, Sparkles } from "lucide-react";
+import { useState, useEffect } from "react";
 import heroBg from "@/assets/hero-bg.jpg";
+import brandEvent from "@/assets/brand-event.jpg";
+import corporateEvent from "@/assets/corporate-event.jpg";
+import floralDecor from "@/assets/floral-decor.jpg";
+import mediaProduction from "@/assets/media-production.jpg";
+import realestateEvent from "@/assets/realestate-event.jpg";
+import tentSetup from "@/assets/tent-setup.jpg";
+import weddingDecor from "@/assets/wedding-decor.jpg";
 
 const HeroSection = () => {
+  const images = [heroBg, brandEvent, corporateEvent, floralDecor, mediaProduction, realestateEvent, tentSetup, weddingDecor];
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 5000); // Change image every 5 seconds
+
+    return () => clearInterval(interval);
+  }, [images.length]);
   return (
     <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Image */}
+      {/* Background Image Carousel */}
       <div className="absolute inset-0">
-        <img
-          src={heroBg}
-          alt="Grand event setup by Nomesh Events Tirupathi"
-          className="w-full h-full object-cover"
-          width={1920}
-          height={1080}
-        />
+        {images.map((image, index) => (
+          <img
+            key={index}
+            src={image}
+            alt={`Event setup ${index + 1}`}
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+              index === currentImageIndex ? "opacity-100" : "opacity-0"
+            }`}
+            width={1920}
+            height={1080}
+          />
+        ))}
         <div className="absolute inset-0 bg-hero-overlay" />
-        <div className="absolute inset-0 bg-gradient-dark opacity-40" />
+        <div className="absolute inset-0 bg-gradient-dark opacity-20" />
       </div>
 
       {/* Floating accents */}
@@ -75,6 +98,20 @@ const HeroSection = () => {
       <a href="#about" className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-float">
         <ArrowDown className="w-5 h-5 text-primary/60" />
       </a>
+
+      {/* Image indicators */}
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+        {images.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => setCurrentImageIndex(index)}
+            className={`w-2 h-2 rounded-full transition-all duration-300 ${
+              index === currentImageIndex ? "bg-primary w-8" : "bg-primary/40 hover:bg-primary/60"
+            }`}
+            aria-label={`Go to image ${index + 1}`}
+          />
+        ))}
+      </div>
     </section>
   );
 };
